@@ -1,0 +1,36 @@
+name: Add Server Time
+
+on:
+  workflow_dispatch: # 允许手动触发此工作流
+  schedule:
+    # 每天的 UTC 时间 0、3、6、9、12、15、18、21 点执行
+    # 这相当于每隔3小时执行一次。请注意是UTC时间。
+    - cron: '0 */3 * * *'
+
+jobs:
+  add_time:
+    runs-on: ubuntu-latest # 在最新的 Ubuntu 环境上运行
+
+    steps:
+      - name: Checkout repository # 获取你的代码
+        uses: actions/checkout@v4
+
+      - name: Set up Python # 设置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x' # 使用最新的 Python 3 版本
+
+      - name: Install Playwright and dependencies # 安装 Playwright 及其浏览器依赖
+        run: |
+          pip install playwright
+          playwright install --with-deps chromium # 安装 Chromium 浏览器及其运行所需依赖
+
+      - name: Run Time Adder Script # 运行 Python 脚本
+        env:
+          # 从 GitHub Secrets 读取环境变量。请在你的仓库设置中配置这些 Secrets。
+          # PTERODACTYL_SESSION 优先使用。如果有效，可绕过邮箱密码登录。
+          PTERODACTYL_SESSION: ${{ secrets.PTERODACTYL_SESSION }}
+          # 如果 PTERODACTYL_SESSION 无效或未设置，则使用以下邮箱和密码
+          PTERODACTYL_EMAIL: ${{ secrets.PTERODACTYL_EMAIL }}
+          PTERODACTYL_PASSWORD: ${{ secrets.PTERODACTYL_PASSWORD }}
+        run: python main.py
