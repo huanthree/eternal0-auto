@@ -3,7 +3,7 @@ import time
 from playwright.sync_api import sync_playwright, Cookie
 import datetime # 尽管移除了调度，但保留datetime导入以防未来需要
 
-def add_server_time(server_url="https://gpanel.eternalzero.cloud/server/0b0a668f"):
+def add_server_time(server_url="https://gpanel.eternalzero.cloud/server/7fce84a0"):
     """
     尝试登录 gpanel.eternalzero.cloud 并点击 "ADD 4H" 按钮。
     优先使用 REMEMBER_WEB_COOKIE 进行会话登录，如果不存在则回退到邮箱密码登录。
